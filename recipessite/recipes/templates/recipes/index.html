@@ -2,9 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Главная</title>
 </head>
 <body>
 <p>Добро пожаловать на сайт</p>
+{% if recipes %}
+{% for r in recipes %}
+<p> {{ r }}</p>
+{% endfor %}
+{% else %}
+<p> Рецептов нет </p>
+{% endif %}
 </body>
 </html>
