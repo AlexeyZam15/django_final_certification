@@ -22,7 +22,7 @@ class Recipe(models.Model):
     description = models.TextField(max_length=1000, verbose_name='Описание')
     steps = models.TextField(max_length=1000, verbose_name='Шаги приготовления')
     time = models.TimeField(verbose_name='Время приготовления')
-    image = models.ImageField(upload_to='recipes/', verbose_name='Изображение', null=True, blank=True)
+    image = models.FileField(upload_to='photos', blank=True, null=True, verbose_name='Изображение')
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE, verbose_name='Автор')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     changed_at = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
