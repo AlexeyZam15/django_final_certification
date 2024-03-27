@@ -37,7 +37,7 @@ class Command(BaseCommand):
             title=f'Рецепт {last_id + i}',
             description=lorem_ipsum.paragraph(),
             steps=lorem_ipsum.paragraph(),
-            time=timedelta(hours=random.randint(1, 4), minutes=random.randint(1, 60)),
+            time=timedelta(minutes=random.randint(1, 60)),
             author=random.choice(users),
         ) for i in range(options['n'])]
         Recipe.objects.bulk_create(data)
