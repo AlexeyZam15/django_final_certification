@@ -37,6 +37,12 @@ class Recipe(models.Model):
         verbose_name = 'рецепт'
         verbose_name_plural = 'рецепты'
 
+    def short(self):
+        # Краткое описание
+        # Возвращает первые 10 слов из описания
+        return ' '.join(self.description.split()[:15]) + '...' if len(
+            self.description.split()) > 15 else self.description
+
 
 class Category(models.Model):
     """

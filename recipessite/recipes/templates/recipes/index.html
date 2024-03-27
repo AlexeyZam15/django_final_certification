@@ -1,17 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Главная</title>
-</head>
-<body>
-<p>Добро пожаловать на сайт</p>
-{% if recipes %}
-{% for r in recipes %}
-<p> {{ r }}</p>
-{% endfor %}
-{% else %}
-<p> Рецептов нет </p>
-{% endif %}
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block content%}
+<h1> 5 случайных рецептов </h1>
+
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for r in recipes %}
+    <div class="col">
+        <div class="card">
+            {% if r.image %}
+            <img src="{{ r.image.url }}" class="card-img-top" alt="изображение {{ r.title }}">
+            {% else %}
+            <img src="..." class="card-img-top" alt="изображение {{ r.title }}">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ r.title }}</h5>
+                <p class="card-text">{{ r.short }}</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
