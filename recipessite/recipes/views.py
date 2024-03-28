@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Recipe, Category, RecipeCategory
 
 """
@@ -35,6 +35,7 @@ def index(request):
                'title': 'Главная',
                'heading': '5 случайных рецептов',
                'menu': menu,
+               'url': 'index',
                }
     return render(request, 'recipes/recipes.html', context)
 
@@ -50,5 +51,19 @@ def all_recipes(request):
                'heading': 'Все рецепты',
                'menu': menu,
                'page': paginator['page'],
+               'url': 'recipes',
                }
     return render(request, 'recipes/recipes.html', context)
+
+
+def recipe_detail(request, recipe_id):
+    """
+    ● Страница с одним подробным рецептом
+    """
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    context = {'recipe': recipe,
+               'title': recipe.title,
+               'menu': menu,
+               'heading': recipe.title,
+               }
+    return render(request, 'recipes/recipe-detail.html', context)

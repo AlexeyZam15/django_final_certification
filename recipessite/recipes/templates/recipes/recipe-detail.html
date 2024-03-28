@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block content%}
+<h1> {{ heading }} </h1>
+
+<div>
+    <p>Автор - {{ recipe.author }}</p>
+    <p>Создано {{ recipe.created_at }}</p>
+    {% if recipe.changed %}
+    <p>Изменено {{ recipe.changed_at }}</p>
+    {% endif %}
+    {% if recipe.image %}
+    <img src="{{ recipe.image.url }}">
+    {% endif %}
+    <div><h4>Описание рецепта</h4>
+        {{ recipe.description }}
+    </div>
+    <div><h4>Время приготовления</h4>
+        {{ recipe.time }}</div>
+    <div><h4>Приготовление</h4>
+        {{ recipe.steps }}
+    </div>
+</div>
+{% endblock %}

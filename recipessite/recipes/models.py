@@ -43,6 +43,11 @@ class Recipe(models.Model):
         return ' '.join(self.description.split()[:15]) + '...' if len(
             self.description.split()) > 15 else self.description
 
+    def is_changed(self):
+        # Проверяет, изменился ли рецепт
+        # Возвращает True, если рецепт изменился, иначе False
+        return self.changed_at != self.created_at
+
 
 class Category(models.Model):
     """
