@@ -20,23 +20,9 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class=" collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav ms-auto ">
-                {% for m in mainmenu %}
-                {% if m.url_name == url %}
-                <li class="nav-item">
-                    <a class="nav-link mx-2 active" aria-current="page" href="{% url m.url_name %}">{{ m.title }}</a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link mx-2" aria-current="page" href="{% url m.url_name %}">{{ m.title }}</a>
-                </li>
-                {% endif %}
-                {% endfor %}
-            </ul>
-            <ul class="navbar-nav ms-auto d-none d-lg-inline-flex">
-            </ul>
-        </div>
+        {% include 'includes/mainmenu.html' with
+        mainmenu=mainmenu
+        url=url %}
     </div>
 </nav>
 <div class="container">
