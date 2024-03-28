@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block content%}
+<div class="row">
+    <h1> {{ heading }} </h1>
+</div>
+
+<!-- Pagination -->
+{% include 'includes/pagination.html' with
+page_obj=recipes
+page=page %}
+<div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for r in recipes %}
+    <div class="col">
+        <div class="card">
+
+            {% if r.image %}
+            <a href="{% url 'recipe' r.id %}" class="txtlink">
+                <img src="{{ r.image.url }}" class="card-img-top" alt="изображение {{ r.title }}">
+            </a>
+            {% endif %}
+            <div class="card-body">
+                <a href="{% url 'recipe' r.id %}" class="txtlink">
+                    <h5 class="card-title">{{ r.title }}</h5></a>
+                <p class="card-text">{{ r.short }}</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
