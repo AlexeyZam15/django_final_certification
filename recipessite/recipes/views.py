@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render, get_object_or_404
-from .models import Recipe, Category, RecipeCategory
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Recipe
+from . import forms
 
 """
 Шаблоны
@@ -60,3 +61,21 @@ def recipe_detail(request, recipe_id):
                'heading': recipe.title,
                }
     return render(request, 'recipes/recipe-detail.html', context)
+
+
+def recipe_add(request):
+    """
+    ● Страница добавления рецепта
+    """
+    form = forms.RecipeForm(request.POST or None, request.FILES or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            recipe = form.save(commit=False)
+            recipe.author = request.user
+            recipe.save()
+            return redirect('recipe', recipe_id=recipe.id)
+    context = {'form': form,
+               'title': 'Добавление рецепта',
+               'heading': 'Добавление рецепта',
+               }
+    return render(request, 'recipes/recipe-form.html', context)

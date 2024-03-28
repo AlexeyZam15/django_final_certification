@@ -48,6 +48,10 @@ class Recipe(models.Model):
         # Возвращает True, если рецепт изменился, иначе False
         return self.changed_at != self.created_at
 
+    @staticmethod
+    def get_fields():
+        return ['title', 'description', 'steps', 'image']
+
 
 class Category(models.Model):
     """
