@@ -12,10 +12,6 @@ from .models import Recipe, Category, RecipeCategory
 ● *другие шаблоны на ваш выбор
 """
 
-menu = [{'title': "Главная", 'url_name': 'index'},
-        {'title': "Рецепты", 'url_name': 'recipes'},
-        ]
-
 
 def get_paginator_dict(request, queryset):
     paginator = Paginator(queryset, 6)
@@ -34,7 +30,6 @@ def index(request):
     context = {'recipes': recipes,
                'title': 'Главная',
                'heading': '5 случайных рецептов',
-               'menu': menu,
                'url': 'index',
                }
     return render(request, 'recipes/recipes.html', context)
@@ -49,7 +44,6 @@ def all_recipes(request):
     context = {'recipes': paginator['page_obj'],
                'title': 'Рецепты',
                'heading': 'Все рецепты',
-               'menu': menu,
                'page': paginator['page'],
                'url': 'recipes',
                }
@@ -63,7 +57,6 @@ def recipe_detail(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
     context = {'recipe': recipe,
                'title': recipe.title,
-               'menu': menu,
                'heading': recipe.title,
                }
     return render(request, 'recipes/recipe-detail.html', context)
