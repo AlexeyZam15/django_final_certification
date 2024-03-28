@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %} {{ title }} {% endblock %}
 {% block content%}
-<h1> 5 случайных рецептов </h1>
+<h1> {{ heading }} </h1>
 
 <div class="row row-cols-1 row-cols-md-2 g-4">
     {% for r in recipes %}
@@ -20,5 +20,9 @@
     </div>
     {% endfor %}
 </div>
+    <!-- Pagination -->
+    {% include 'includes/pagination.html' with
+    page_obj=recipes
+    page=page %}
 
 {% endblock %}
