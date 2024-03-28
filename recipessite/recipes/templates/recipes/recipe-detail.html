@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
-{% block title %} {{ title }} {% endblock %}
+{% block title %} Рецепт {{ title }} {% endblock %}
 {% block content%}
-<h1> {{ heading }} </h1>
+<h1> Рецепт {{ heading }} </h1>
 
 <div>
     <p>Автор - {{ recipe.author }}</p>
@@ -9,15 +9,19 @@
     {% if recipe.changed %}
     <p>Изменено {{ recipe.changed_at }}</p>
     {% endif %}
+    {% if recipe.author == user %}
+    <p><a class="btn btn-primary" href="{% url 'edit_recipe' recipe.id %}" role="button">Редактировать</a></p>
+    {% endif %}
     {% if recipe.image %}
     <img src="{{ recipe.image.url }}">
     {% endif %}
-    <div><h4>Описание рецепта</h4>
+    <div><h4>Описание</h4>
         {{ recipe.description }}
     </div>
     <div><h4>Время приготовления</h4>
-        {{ recipe.time }}</div>
-    <div><h4>Приготовление</h4>
+        {{ recipe.time }}
+    </div>
+    <div><h4>Как готовить</h4>
         {{ recipe.steps }}
     </div>
 </div>

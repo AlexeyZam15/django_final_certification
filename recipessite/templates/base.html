@@ -19,10 +19,15 @@
                 aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
+        {% if user.is_authenticated %}
+        {% include 'includes/mainmenu.html' with
+        mainmenu=usermenu
+        url=url %}
+        {% else %}
         {% include 'includes/mainmenu.html' with
         mainmenu=mainmenu
         url=url %}
+        {% endif %}
     </div>
 </nav>
 <div class="container">
