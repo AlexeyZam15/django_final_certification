@@ -16,7 +16,7 @@
     <ul class="navbar-nav ms-auto d-none d-lg-inline-flex">
         {% if user.is_authenticated %}
         <li>
-           <span class="navbar-brand mb-0 h1">{{ user.username }}</span>
+            <span class="navbar-brand mb-0 h1">{{ user.username }}</span>
         </li>
         <li class="nav-item">
             <a class="nav-link mx-2" aria-current="page" href="{% url 'logout' %}">Выйти</a>
