@@ -79,3 +79,20 @@ def recipe_add(request):
                'heading': 'Добавление рецепта',
                }
     return render(request, 'recipes/recipe-form.html', context)
+
+
+def recipe_edit(request, recipe_id):
+    """
+    ● Страница редактирования рецепта
+    """
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    form = forms.RecipeForm(request.POST or None, request.FILES or None, instance=recipe)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect('recipe', recipe_id=recipe.id)
+    context = {'form': form,
+               'title': 'Редактирование рецепта',
+               'heading': 'Редактирование рецепта',
+               }
+    return render(request, 'recipes/recipe-form.html', context)
