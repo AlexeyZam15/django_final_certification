@@ -22,7 +22,7 @@
 
         <div class=" collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav ms-auto ">
-                {% for m in menu %}
+                {% for m in mainmenu %}
                 {% if m.url_name == url %}
                 <li class="nav-item">
                     <a class="nav-link mx-2 active" aria-current="page" href="{% url m.url_name %}">{{ m.title }}</a>
