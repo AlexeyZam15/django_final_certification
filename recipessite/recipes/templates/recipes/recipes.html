@@ -4,7 +4,6 @@
 <div class="row">
     <h1> {{ heading }} </h1>
 </div>
-
 <!-- Pagination -->
 {% include 'includes/pagination.html' with
 page_obj=recipes
@@ -16,6 +15,9 @@ page=page %}
             <div class="card-body">
                 <a href="{% url 'recipe' r.id %}" class="txtlink">
                     <h5 class="card-title">{{ r.title }}</h5></a>
+                {% if url != "categories" %}
+                <p class="card-text">{{ r.category.category }}</p>
+                {% endif %}
                 <p class="card-text">{{ r.short }}</p>
             </div>
         </div>
