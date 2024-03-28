@@ -48,6 +48,12 @@ class Recipe(models.Model):
         # Возвращает True, если рецепт изменился, иначе False
         return self.changed_at != self.created_at
 
+    @property
+    def category(self):
+        # Возвращает категорию рецепта
+        # Возвращает None, если рецепт не принадлежит ни одной категории
+        return RecipeCategory.objects.filter(recipe=self).first()
+
     @staticmethod
     def get_fields():
         return ['title', 'description', 'steps', 'image']
