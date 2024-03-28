@@ -31,7 +31,15 @@ def logout_user(request):
 
 
 def register(request):
-    form = RegisterUserForm()
+    form = RegisterUserForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            login(request, user)
+            messages.success(request, 'Вы успешно зарегистрировались')
+            return redirect('index')
     context = {'form': form,
                'title': 'Регистрация',
                'url': 'register',
