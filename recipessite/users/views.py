@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -19,3 +20,9 @@ class RegisterUser(CreateView):
     template_name = 'users/register.html'
     extra_context = {'title': 'Регистрация', 'url': 'register'}
     success_url = reverse_lazy('login')
+
+
+@login_required
+def user_logout(request):
+    logout(request)
+    return redirect('login')

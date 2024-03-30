@@ -19,10 +19,7 @@
             <span class="navbar-brand mb-0 h1">{{ user.username }}</span>
         </li>
         <li class="nav-item">
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-link nav-link mx-2">Выйти</button>
-            </form>
+            <a class="nav-link mx-2 active" aria-current="page" href="{% url 'logout' %}">Выйти</a>
         </li>
 
         {% else %}
