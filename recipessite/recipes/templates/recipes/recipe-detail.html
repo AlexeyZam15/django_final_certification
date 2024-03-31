@@ -2,16 +2,18 @@
 {% block title %} Рецепт {{ title }} {% endblock %}
 {% block content%}
 <h1> Рецепт {{ heading }} </h1>
-
+{% if recipe.author == user %}
+<p><a class="btn btn-dark" href="{% url 'edit_recipe' recipe.id %}" role="button">Редактировать</a></p>
+{% endif %}
 <div>
-    <p>Автор - {{ recipe.author }}</p>
-    <p>Создано {{ recipe.created_at }}</p>
-    {% if recipe.changed %}
-    <p>Изменено {{ recipe.changed_at }}</p>
-    {% endif %}
-    {% if recipe.author == user %}
-    <p><a class="btn btn-primary" href="{% url 'edit_recipe' recipe.id %}" role="button">Редактировать</a></p>
-    {% endif %}
+    <div class="row align-items-start">
+        <div class="col">Автор: {{ recipe.author }}</div>
+        <div class="col">Создано: {{ recipe.created_at }}</div>
+        {% if recipe.is_changed %}
+        <div class="col">Изменено: {{ recipe.changed_at }}</div>
+        {% endif %}
+    </div>
+    <hr>
     {% if recipe.image %}
     <img src="{{ recipe.image.url }}">
     {% endif %}

@@ -76,6 +76,25 @@ class Category(models.Model):
         verbose_name = 'категория'
         verbose_name_plural = 'категории'
 
+    def short(self):
+        # Краткое описание
+        # Возвращает первые 10 слов из описания
+        return ' '.join(self.description.split()[:30]) + '...' if len(
+            self.description.split()) > 30 else self.description
+
+    def recipes(self):
+        # Возвращает рецепты категории
+        # Возвращает множество рецептов
+        return RecipeCategory.objects.filter(category=self).values_list('recipe', flat=True)
+
+    def last_created_recept_date(self):
+        # Возвращает дату последнего рецепта категории
+        # Возвращает дату или None, если рецептов нет
+        recipes = RecipeCategory.objects.filter(category=self).values_list('recipe', flat=True)
+        if recipes:
+            return Recipe.objects.filter(id__in=recipes).order_by('-created_at').first().created_at
+        return None
+
 
 class RecipeCategory(models.Model):
     """

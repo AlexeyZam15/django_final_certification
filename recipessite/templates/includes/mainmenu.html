@@ -1,6 +1,18 @@
-<div class=" collapse navbar-collapse" id="navbarNavDropdown">
+<div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav ms-auto ">
         {% for m in mainmenu %}
+        {% if 'sub_menu' in m %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="{% url m.url_name %}" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ m.title }}
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              {% for p in m.sub_menu %}
+            <li><a class="dropdown-item" href="{% url p.url_name %}">{{ p.title }}</a></li>
+              {% endfor %}
+          </ul>
+        </li>
+        {% else %}
         {% if m.url_name == url %}
         <li class="nav-item">
             <a class="nav-link mx-2 active" aria-current="page" href="{% url m.url_name %}">{{ m.title }}</a>
@@ -9,6 +21,7 @@
         <li class="nav-item">
             <a class="nav-link mx-2" aria-current="page" href="{% url m.url_name %}">{{ m.title }}</a>
         </li>
+        {% endif %}
         {% endif %}
         {% endfor %}
 

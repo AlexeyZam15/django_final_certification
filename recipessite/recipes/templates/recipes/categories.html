@@ -9,16 +9,17 @@
 page_obj=page_obj
 page=page %}
 <div class="row row-cols-1 row-cols-md-2 g-4">
-    {% for r in page_obj %}
+    {% for c in page_obj %}
     <div class="col">
         <div class="card">
             <div class="card-body">
-                <a href="{% url 'recipe' r.id %}" class="txtlink">
-                    <h5 class="card-title">{{ r.title }}</h5></a>
-                {% if url != "categories" %}
-                <p class="card-text">{{ r.category.category }}</p>
+                <a href="{% url 'category' c.id %}" class="txtlink">
+                    <h5 class="card-title">{{ c.title }}</h5></a>
+                <p class="card-text">{{ c.short }}</p>
+                <p>Рецептов: {{ c.recipes|length }}</p>
+                {% if category.recipes %}
+                <a class="btn btn-dark" href="{% url 'category_recipes' c.id %}" role="button">Посмотреть статьи</a>
                 {% endif %}
-                <p class="card-text">{{ r.short }}</p>
             </div>
         </div>
     </div>

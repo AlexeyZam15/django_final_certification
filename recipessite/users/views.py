@@ -25,4 +25,4 @@ class RegisterUser(CreateView):
 @login_required
 def user_logout(request):
     logout(request)
-    return redirect('login')
+    return redirect('index')

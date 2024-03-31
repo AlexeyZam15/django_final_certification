@@ -16,12 +16,12 @@ from . import forms
 """
 
 
-def get_categories_sidemenu():
+def get_categories_menu():
     categories = Category.objects.all()
-    sidemenu = {'title': 'Категории',
-                'menu': [{'title': category.title, 'url': reverse('category_recipes', args=[category.id])} for category
-                         in categories]}
-    return sidemenu
+    cats_menu = {'title': 'Категории',
+                 'menu': [{'title': category.title, 'url': reverse('category_recipes', args=[category.id])} for category
+                          in categories]}
+    return cats_menu
 
 
 def get_paginator_dict(request, queryset):
@@ -38,12 +38,12 @@ def index(request):
     ● Главная с 5 случайными рецептами кратко
     """
     recipes = Recipe.objects.order_by('?')[:5]
-    sidemenu = get_categories_sidemenu()
-    context = {'recipes': recipes,
+    sub_menu = get_categories_menu()
+    context = {'page_obj': recipes,
                'title': 'Главная',
                'heading': '5 случайных рецептов',
                'url': 'index',
-               'sidemenu': sidemenu,
+               'sub_menu': sub_menu,
                }
     return render(request, 'recipes/recipes.html', context)
 
@@ -54,8 +54,8 @@ def all_recipes(request):
     """
     recipes = Recipe.objects.all()
     paginator = get_paginator_dict(request, recipes)
-    sidemenu = get_categories_sidemenu()
-    context = {'recipes': paginator['page_obj'],
+    sidemenu = get_categories_menu()
+    context = {'page_obj': paginator['page_obj'],
                'title': 'Рецепты',
                'heading': 'Все рецепты',
                'page': paginator['page'],
@@ -117,11 +117,11 @@ def category_recipes(request, category_id):
     ● Страница со всеми рецептами по выбранной категории
     """
     category = get_object_or_404(Category, id=category_id)
-    category_recipes = RecipeCategory.objects.filter(category=category)
-    recipes = [recipe.recipe for recipe in category_recipes]
+    cat_recipes = RecipeCategory.objects.filter(category=category)
+    recipes = [recipe.recipe for recipe in cat_recipes]
     paginator = get_paginator_dict(request, recipes)
-    sidemenu = get_categories_sidemenu()
-    context = {'recipes': paginator['page_obj'],
+    sidemenu = get_categories_menu()
+    context = {'page_obj': paginator['page_obj'],
                'title': f'Рецепты категории: {category.title}',
                'heading': f'Рецепты категории: {category.title}',
                'page': paginator['page'],
@@ -129,3 +129,30 @@ def category_recipes(request, category_id):
                'sidemenu': sidemenu,
                }
     return render(request, 'recipes/recipes.html', context)
+
+
+def show_categories(request):
+    """
+    ● Страница со всеми категориями
+    """
+    categories = Category.objects.all()
+    paginator = get_paginator_dict(request, categories)
+    context = {'page_obj': paginator['page_obj'],
+               'title': 'Категории',
+               'heading': 'Все категории',
+               'page': paginator['page'],
+               'url': 'categories',
+               }
+    return render(request, 'recipes/categories.html', context)
+
+
+def category_detail(request, category_id):
+    """
+    ● Страница с одной категорией
+    """
+    category = get_object_or_404(Category, id=category_id)
+    context = {'category': category,
+               'title': category.title,
+               'heading': category.title,
+               }
+    return render(request, 'recipes/category-detail.html', context)

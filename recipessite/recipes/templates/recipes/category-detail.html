@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %} Рецепт {{ title }} {% endblock %}
+{% block content%}
+<h1> Категория {{ heading }} </h1>
+<div>
+    <h4>Описание</h4>
+    {{ category.description }}
+    <hr>
+    <p>Рецептов в категории: {{ category.recipes|length }}</p>
+    {% if category.recipes %}
+    <p>Последний рецепт добавлен: {{ category.last_created_recept_date }}</p>
+    <a class="btn btn-dark" href="{% url 'category_recipes' category.id %}" role="button">Посмотреть статьи</a>
+    {% endif %}
+</div>
+{% endblock %}
