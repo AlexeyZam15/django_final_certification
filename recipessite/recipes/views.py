@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -76,7 +77,7 @@ def recipe_detail(request, recipe_id):
                }
     return render(request, 'recipes/recipe-detail.html', context)
 
-
+@login_required
 def recipe_add(request):
     """
     ● Страница добавления рецепта
@@ -94,7 +95,7 @@ def recipe_add(request):
                }
     return render(request, 'recipes/recipe-form.html', context)
 
-
+@login_required
 def recipe_edit(request, recipe_id):
     """
     ● Страница редактирования рецепта
