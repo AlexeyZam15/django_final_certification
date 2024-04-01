@@ -15,8 +15,8 @@ page=page %}
             <div class="card-body">
                 <a href="{% url 'recipe' r.id %}" class="txtlink">
                     <h5 class="card-title">{{ r.title }}</h5></a>
-                {% if url != "categories" %}
-                <p class="card-text">{{ r.category.category }}</p>
+                {% if r.category %}
+                <a class="txtlink" href="{% url 'category' r.category.category.id %}">{{ r.category.category }}</a>
                 {% endif %}
                 <p class="card-text">{{ r.short }}</p>
             </div>

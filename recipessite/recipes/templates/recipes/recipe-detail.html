@@ -1,9 +1,21 @@
 {% extends 'base.html' %}
 {% block title %} Рецепт {{ title }} {% endblock %}
 {% block content%}
-<h1> Рецепт {{ heading }} </h1>
-{% if recipe.author == user %}
-<p><a class="btn btn-dark" href="{% url 'edit_recipe' recipe.id %}" role="button">Редактировать</a></p>
+<div class="row align-items-start">
+    <div class="col">
+        <h1> Рецепт {{ heading }} </h1>
+    </div>
+    {% if recipe.author == user %}
+    <div class="col">
+
+        <p><a class="btn btn-dark" href="{% url 'edit_recipe' recipe.id %}" role="button">Редактировать</a></p>
+    </div>
+    {% endif %}
+</div>
+{% if recipe.category %}
+<a class="txtlink" href="{% url 'category' recipe.category.category.id %}">{{ recipe.category.category }}</a>
+{% else %}
+<p>Без категории</p>
 {% endif %}
 <div>
     <div class="row align-items-start">

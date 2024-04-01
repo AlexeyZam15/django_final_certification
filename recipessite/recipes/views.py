@@ -88,6 +88,7 @@ def recipe_add(request):
             recipe = form.save(commit=False)
             recipe.author = request.user
             recipe.save()
+            RecipeCategory.objects.create(recipe=recipe, category=form.cleaned_data['category'])
             return redirect('recipe', recipe_id=recipe.id)
     context = {'form': form,
                'title': 'Добавление рецепта',

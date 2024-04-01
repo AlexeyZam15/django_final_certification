@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 from django import forms
-from .models import Recipe
+from .models import Recipe, Category
 
 
 class RecipeForm(forms.ModelForm):
@@ -11,6 +11,13 @@ class RecipeForm(forms.ModelForm):
         required=False, label='Минуты', widget=forms.NumberInput(attrs={'min': 0, 'max': 59}))
     seconds = forms.IntegerField(
         required=False, label='Секунды', widget=forms.NumberInput(attrs={'min': 0, 'max': 59}))
+
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label='Категория',
+        empty_label='Не выбрано',
+    )
 
     def save(self, commit=True):
         recipe = super().save(commit=False)
