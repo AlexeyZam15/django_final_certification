@@ -11,7 +11,8 @@ class MenuLink:
 
 
 menu = [MenuLink('Главная', reverse('index')),
-        MenuLink('Рецепты', reverse('recipes'), [MenuLink('Добавить рецепт', reverse('add_recipe')), ]),
+        MenuLink('Рецепты', reverse('recipes'),
+                 [MenuLink('Все рецепты', reverse('recipes')), MenuLink('Добавить рецепт', reverse('add_recipe')), ]),
         ]
 
 
@@ -19,6 +20,8 @@ def get_menu():
     """
     ● Меню для шапки сайта
     """
-    return menu + [MenuLink('Категории', reverse('categories'),
-                            [MenuLink(category.title, reverse('category', args=(category.id,))) for category in
-                             Category.objects.all()])]
+    return menu + [MenuLink(
+        'Категории', reverse('categories'),
+        [MenuLink('Все категории', reverse('categories'))] +
+        [MenuLink(category.title, reverse('category', args=(category.id,)))
+         for category in Category.objects.all()])]
