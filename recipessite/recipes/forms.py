@@ -5,13 +5,6 @@ from .models import Recipe, Category, RecipeCategory
 
 
 class RecipeForm(forms.ModelForm):
-    hours = forms.IntegerField(
-        required=False, label='Часы', widget=forms.NumberInput(attrs={'min': 0, 'max': 23}))
-    minutes = forms.IntegerField(
-        required=False, label='Минуты', widget=forms.NumberInput(attrs={'min': 0, 'max': 59}))
-    seconds = forms.IntegerField(
-        required=False, label='Секунды', widget=forms.NumberInput(attrs={'min': 0, 'max': 59}))
-
     category = forms.ModelChoiceField(
         queryset=Category.objects.all(),
         widget=forms.Select(attrs={'class': 'form-control'}),
@@ -20,17 +13,6 @@ class RecipeForm(forms.ModelForm):
         blank=True,
         required=False,
     )
-
-    def save(self, commit=True, author=None):
-        recipe = super().save(commit=False)
-        recipe.time = timedelta(
-            hours=self.cleaned_data['hours'],
-            minutes=self.cleaned_data['minutes'],
-            seconds=self.cleaned_data['seconds'],
-        )
-        if commit:
-            recipe.save()
-        return recipe
 
     class Meta:
         model = Recipe
