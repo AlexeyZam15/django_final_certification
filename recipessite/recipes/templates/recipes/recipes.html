@@ -26,8 +26,11 @@ page=page %}
                         </div>
                         {% if r.author == user %}
                         <div class="col">
-                            <p><a class="btn btn-dark" href="{% url 'edit_recipe' r.id %}"
-                                  role="button">Редактировать</a></p>
+                            <p><a class="btn btn-success" href="{% url 'edit_recipe' r.id %}" role="button">✏️</a></p>
+                        </div>
+                        <div class="col">
+                            <p><a class="btn btn-danger" href="{% url 'delete_recipe' r.id %}" role="button"
+                                  onclick="return confirm('Вы уверены что хотите удалить данный рецепт?')">❌</a></p>
                         </div>
                         {% endif %}
                     </div>

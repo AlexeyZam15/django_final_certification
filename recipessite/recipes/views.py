@@ -3,8 +3,8 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
+from .forms import RecipeForm
 from .models import Recipe, Category, RecipeCategory
-from . import forms
 
 """
 Шаблоны
@@ -83,7 +83,7 @@ def recipe_add(request):
     """
     ● Страница добавления рецепта
     """
-    form = forms.RecipeForm(request.POST or None, request.FILES or None)
+    form = RecipeForm(request.POST or None, request.FILES or None)
     if request.method == 'POST':
         if form.is_valid():
             recipe = form.save(commit=False)
@@ -107,7 +107,7 @@ def recipe_edit(request, recipe_id):
     ● Страница редактирования рецепта
     """
     recipe = get_object_or_404(Recipe, id=recipe_id)
-    form = forms.RecipeForm(request.POST or None, request.FILES or None, instance=recipe)
+    form = RecipeForm(request.POST or None, request.FILES or None, instance=recipe)
     if request.method == 'POST':
         if form.is_valid():
             form.save()
@@ -167,3 +167,12 @@ def category_detail(request, category_id):
                'heading': category.title,
                }
     return render(request, 'recipes/category-detail.html', context)
+
+
+def recipe_delete(request, recipe_id):
+    """
+    ● Удаление рецепта
+    """
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    recipe.delete()
+    return redirect('recipes')
