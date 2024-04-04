@@ -77,6 +77,7 @@ def recipe_detail(request, recipe_id):
                }
     return render(request, 'recipes/recipe-detail.html', context)
 
+
 @login_required
 def recipe_add(request):
     """
@@ -88,13 +89,17 @@ def recipe_add(request):
             recipe = form.save(commit=False)
             recipe.author = request.user
             recipe.save()
-            RecipeCategory.objects.create(recipe=recipe, category=form.cleaned_data['category'])
+            if form.cleaned_data['category']:
+                recipes_cat = RecipeCategory.objects.filter(recipe=recipe)
+                recipes_cat.delete()
+                RecipeCategory.objects.create(recipe=recipe, category=form.cleaned_data['category'])
             return redirect('recipe', recipe_id=recipe.id)
     context = {'form': form,
                'title': 'Добавление рецепта',
                'heading': 'Добавление рецепта',
                }
     return render(request, 'recipes/recipe-form.html', context)
+
 
 @login_required
 def recipe_edit(request, recipe_id):
@@ -106,6 +111,10 @@ def recipe_edit(request, recipe_id):
     if request.method == 'POST':
         if form.is_valid():
             form.save()
+            if form.cleaned_data['category']:
+                recipes_cat = RecipeCategory.objects.filter(recipe=recipe)
+                recipes_cat.delete()
+                RecipeCategory.objects.create(recipe=recipe, category=form.cleaned_data['category'])
             return redirect('recipe', recipe_id=recipe.id)
     context = {'form': form,
                'title': 'Редактирование рецепта',
