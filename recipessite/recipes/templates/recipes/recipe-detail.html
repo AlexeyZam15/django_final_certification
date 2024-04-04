@@ -7,7 +7,6 @@
     </div>
     {% if recipe.author == user %}
     <div class="col">
-
         <p><a class="btn btn-dark" href="{% url 'edit_recipe' recipe.id %}" role="button">Редактировать</a></p>
     </div>
     {% endif %}
