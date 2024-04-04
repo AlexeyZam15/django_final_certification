@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 from django import forms
-from .models import Recipe, Category
+from .models import Recipe, Category, RecipeCategory
 
 
 class RecipeForm(forms.ModelForm):
@@ -17,9 +17,11 @@ class RecipeForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'form-control'}),
         label='Категория',
         empty_label='Не выбрано',
+        blank=True,
+        required=False,
     )
 
-    def save(self, commit=True):
+    def save(self, commit=True, author=None):
         recipe = super().save(commit=False)
         recipe.time = timedelta(
             hours=self.cleaned_data['hours'],

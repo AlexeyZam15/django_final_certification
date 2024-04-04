@@ -17,7 +17,7 @@ page=page %}
                     <h5 class="card-title">{{ c.title }}</h5></a>
                 <p class="card-text">{{ c.short }}</p>
                 <p>Рецептов: {{ c.recipes|length }}</p>
-                {% if category.recipes %}
+                {% if c.recipes %}
                 <a class="btn btn-dark" href="{% url 'category_recipes' c.id %}" role="button">Посмотреть статьи</a>
                 {% endif %}
             </div>
