@@ -10,31 +10,38 @@ page_obj=page_obj
 page=page %}
 <div class="row row-cols-1 row-cols-md-2 g-4">
     {% for r in page_obj %}
-    <div class="col">
-        <div class="card">
-            <div class="card-body">
-                <div class="row align-items-start">
-                    <div class="col">
-                        <a href="{% url 'recipe' r.id %}" class="txtlink">
-                            <h5 class="card-title">{{ r.title }}</h5></a>
-                    </div>
-                    {% if r.author == user %}
-                    <div class="col">
-                        <p><a class="btn btn-dark" href="{% url 'edit_recipe' r.id %}"
-                              role="button">Редактировать</a></p>
-                    </div>
-                    {% endif %}
-                </div>
-                {% if r.category %}
-                <a class="txtlink" href="{% url 'category' r.category.category.id %}">{{ r.category.category }}</a>
+    <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+            <div class="col-md-4">
+                {% if r.image %}
+                <img width="210px" height="210px" src="{{ r.image.url }}" class="img-fluid rounded-start">
                 {% endif %}
-                <p class="card-text">{{ r.short }}</p>
-                <div class="row align-items-start">
-                    <div class="col">Автор: {{ r.author }}</div>
-                    <div class="col">Создано: {{ r.created_at }}</div>
-                    {% if recipe.is_changed %}
-                    <div class="col">Изменено: {{ r.changed_at }}</div>
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <div class="row align-items-start">
+                        <div class="col">
+                            <a href="{% url 'recipe' r.id %}" class="txtlink">
+                                <h5 class="card-title">{{ r.title }}</h5></a>
+                        </div>
+                        {% if r.author == user %}
+                        <div class="col">
+                            <p><a class="btn btn-dark" href="{% url 'edit_recipe' r.id %}"
+                                  role="button">Редактировать</a></p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% if r.category %}
+                    <a class="txtlink" href="{% url 'category' r.category.category.id %}">{{ r.category.category }}</a>
                     {% endif %}
+                    <p class="card-text">{{ r.short }}</p>
+                    <div class="col">Автор: {{ r.author }}</div>
+                    <div class="row align-items-start">
+                        <div class="col"><small class="text-muted">Создано: {{ r.created_at }}</small></div>
+                        {% if r.is_changed %}
+                        <div class="col"><small class="text-muted">Изменено: {{ r.changed_at }}</small></div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
