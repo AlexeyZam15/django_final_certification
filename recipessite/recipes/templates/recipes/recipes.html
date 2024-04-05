@@ -24,7 +24,7 @@ page=page %}
                             <a href="{% url 'recipe' r.id %}" class="txtlink">
                                 <h5 class="card-title">{{ r.title }}</h5></a>
                         </div>
-                        {% if user.is_superuser or recipe.author == user %}
+                        {% if user.is_superuser or r.author == user %}
                         <div class="col">
                             <p><a class="btn btn-success" href="{% url 'edit_recipe' r.id %}" role="button">✏️</a></p>
                         </div>
@@ -42,6 +42,7 @@ page=page %}
                         {% endfor %}
                     </div>
                     <p class="card-text">{{ r.short|safe }}</p>
+                    <p class="card-text">Время приготовления: {{ r.time }}</p>
                     <div class="col">Автор:
                         {% if r.author.first_name or r.author.last_name %}
                         {{ r.author.first_name }} {{ r.author.last_name }}
