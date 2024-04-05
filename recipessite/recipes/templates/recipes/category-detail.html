@@ -4,7 +4,7 @@
 <h1> Категория {{ heading }} </h1>
 <div>
     <h4>Описание</h4>
-    {{ category.description }}
+    {{ category.description|safe }}
     <hr>
     <p>Рецептов в категории: {{ category.recipes|length }}</p>
     {% if category.recipes %}
