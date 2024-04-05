@@ -104,7 +104,7 @@ DATABASES = {
         'NAME': 'AlexeyZam15$default',
         'USER': 'AlexeyZam15>',
         'PASSWORD': os.getenv('MYSQL_PASSWORD'),
-        'HOST': 'alexeyzam15.pythonanywhere.com',
+        'HOST': 'AlexeyZam15.mysql.pythonanywhere-services.com',
         'OPTIONS': {
             'init_command': "SET NAMES 'utf8mb4';SET sql_mode='STRICT_TRANS_TABLES'",
             'charset': 'utf8mb4',
