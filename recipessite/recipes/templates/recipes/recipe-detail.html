@@ -3,9 +3,9 @@
 {% block content%}
 <div class="row align-items-start">
     <div class="col">
-        <h1> Рецепт {{ heading }} </h1>
+        <h1> {{ heading }} </h1>
     </div>
-    {% if recipe.author == user %}
+    {% if user.is_superuser or recipe.author == user %}
     <div class="col">
         <p><a class="btn btn-success" href="{% url 'edit_recipe' recipe.id %}" role="button">Редактировать</a></p>
     </div>
@@ -23,7 +23,12 @@
     {% endfor %}
 </div>
 <div class="row align-items-start">
-    <div class="col">Автор: {{ recipe.author }}</div>
+    <div class="col">Автор: {% if recipe.author.first_name or r.author.last_name %}
+        {{ recipe.author.first_name }} {{ recipe.author.last_name }}
+        {% else %}
+        {{ recipe.author }}
+        {% endif %}
+    </div>
     <div class="col">Создано: {{ recipe.created_at }}</div>
     {% if recipe.is_changed %}
     <div class="col">Изменено: {{ recipe.changed_at }}</div>
@@ -31,15 +36,15 @@
 </div>
 <hr>
 {% if recipe.image %}
-<img src="{{ recipe.image.url }}">
+<img width="50%" src="{{ recipe.image.url }}">
 {% endif %}
 <div><h4>Описание</h4>
-    {{ recipe.description }}
+    {{ recipe.description|safe }}
 </div>
 <div><h4>Время приготовления</h4>
     {{ recipe.time }}
 </div>
-<div><h4>Как готовить</h4>
-    {{ recipe.steps }}
+<div><h4>Инструкция приготовления</h4>
+    {{ recipe.steps|safe }}
 </div>
 {% endblock %}

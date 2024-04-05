@@ -1,6 +1,5 @@
-from datetime import datetime
-
 from django.db import models
+from ckeditor.fields import RichTextField
 
 """
 Модели
@@ -21,8 +20,8 @@ class Recipe(models.Model):
     ○ *другие поля на ваш выбор, например ингредиенты и т.п.
     """
     title = models.CharField(max_length=100, unique=True, verbose_name='Название', default='Название')
-    description = models.TextField(max_length=1000, verbose_name='Описание', default='Описание')
-    steps = models.TextField(max_length=1000, verbose_name='Шаги приготовления', default='Шаги приготовления')
+    description = RichTextField(verbose_name='Описание', default='Описание')
+    steps = RichTextField(verbose_name='Шаги приготовления', default='Шаги приготовления')
     time = models.DurationField(verbose_name='Время приготовления', default="00:05:00")
     image = models.ImageField(upload_to='photos', blank=True, null=True, verbose_name='Изображение')
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE, verbose_name='Автор')
@@ -40,9 +39,9 @@ class Recipe(models.Model):
 
     def short(self):
         # Краткое описание
-        # Возвращает первые 10 слов из описания
-        return ' '.join(self.description.split()[:15]) + '...' if len(
-            self.description.split()) > 15 else self.description
+        # Возвращает первые 2 предложения из описания
+        text = self.description.split('.')
+        return '.'.join(text[:2]) + "." if len(text) >= 2 else text
 
     def is_changed(self):
         # Проверяет, изменился ли рецепт
@@ -66,21 +65,21 @@ class Category(models.Model):
     ○ *другие поля на ваш выбор
     """
     title = models.CharField(max_length=255, unique=True, verbose_name='Название')
-    description = models.TextField(max_length=1000, verbose_name='Описание')
+    description = RichTextField(verbose_name='Описание', default='Описание')
 
     def __str__(self):
         return self.title
 
     class Meta:
-        ordering = ['-id']
+        ordering = ['id']
         verbose_name = 'категория'
         verbose_name_plural = 'категории'
 
     def short(self):
         # Краткое описание
-        # Возвращает первые 10 слов из описания
-        return ' '.join(self.description.split()[:30]) + '...' if len(
-            self.description.split()) > 30 else self.description
+        # Возвращает первые 2 предложения из описания
+        text = self.description.split('.')
+        return ('.'.join(text[:2]) + ".") if len(text) > 2 else self.description
 
     def recipes(self):
         # Возвращает рецепты категории
