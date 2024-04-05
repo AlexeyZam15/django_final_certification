@@ -16,7 +16,7 @@ page=page %}
                 <div class="card-body">
                     <a href="{% url 'category' c.id %}" class="txtlink">
                         <h5 class="card-title">{{ c.title }}</h5></a>
-                    <p class="card-text">{{ c.short }}</p>
+                    <p class="card-text">{{ c.short|safe }}</p>
                     <p>Рецептов: {{ c.recipes|length }}</p>
                     {% if c.recipes %}
                     <a class="btn btn-dark" href="{% url 'category_recipes' c.id %}" role="button">Посмотреть статьи</a>
