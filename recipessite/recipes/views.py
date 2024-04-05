@@ -88,11 +88,10 @@ def recipe_add(request):
         if form.is_valid():
             recipe = form.save(commit=False)
             recipe.author = request.user
+            categories = form.cleaned_data['categories']
+            data = [RecipeCategory(recipe=recipe, category=category) for category in categories]
             recipe.save()
-            if form.cleaned_data['category']:
-                recipes_cat = RecipeCategory.objects.filter(recipe=recipe)
-                recipes_cat.delete()
-                RecipeCategory.objects.create(recipe=recipe, category=form.cleaned_data['category'])
+            RecipeCategory.objects.bulk_create(data)
             return redirect('recipe', recipe_id=recipe.id)
     context = {'form': form,
                'title': 'Добавление рецепта',
@@ -110,11 +109,20 @@ def recipe_edit(request, recipe_id):
     form = RecipeForm(request.POST or None, request.FILES or None, instance=recipe)
     if request.method == 'POST':
         if form.is_valid():
+            categories = form.cleaned_data['categories']
+            data = []
+            if categories:
+                all_categories = Category.objects.all()
+                for category in all_categories:
+                    if category in categories:
+                        for category in categories:
+                            if not RecipeCategory.objects.filter(recipe=recipe, category=category):
+                                data.append(RecipeCategory(recipe=recipe, category=category))
+                    else:
+                        RecipeCategory.objects.filter(recipe=recipe, category=category).delete()
             form.save()
-            if form.cleaned_data['category']:
-                recipes_cat = RecipeCategory.objects.filter(recipe=recipe)
-                recipes_cat.delete()
-                RecipeCategory.objects.create(recipe=recipe, category=form.cleaned_data['category'])
+            RecipeCategory.objects.bulk_create(data)
+
             return redirect('recipe', recipe_id=recipe.id)
     context = {'form': form,
                'title': 'Редактирование рецепта',

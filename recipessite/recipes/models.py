@@ -24,10 +24,11 @@ class Recipe(models.Model):
     description = models.TextField(max_length=1000, verbose_name='Описание', default='Описание')
     steps = models.TextField(max_length=1000, verbose_name='Шаги приготовления', default='Шаги приготовления')
     time = models.DurationField(verbose_name='Время приготовления', default="00:05:00")
-    image = models.FileField(upload_to='photos', blank=True, null=True, verbose_name='Изображение')
+    image = models.ImageField(upload_to='photos', blank=True, null=True, verbose_name='Изображение')
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE, verbose_name='Автор')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     changed_at = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
+    categories = models.ManyToManyField('Category', verbose_name='Категории', through='RecipeCategory')
 
     def __str__(self):
         return self.title
@@ -49,14 +50,13 @@ class Recipe(models.Model):
         return self.changed_at != self.created_at
 
     @property
-    def category(self):
-        # Возвращает категорию рецепта
-        # Возвращает None, если рецепт не принадлежит ни одной категории
-        return RecipeCategory.objects.filter(recipe=self).first()
+    def get_categories(self):
+        # Возвращает список категорий рецепта
+        return [category for category in self.categories.all()]
 
     @staticmethod
     def get_fields():
-        return ['title', 'description', 'steps', 'image', 'time']
+        return ['title', 'description', 'steps', 'image', 'time', 'categories']
 
 
 class Category(models.Model):

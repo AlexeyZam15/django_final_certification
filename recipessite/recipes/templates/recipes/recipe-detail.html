@@ -15,31 +15,31 @@
     </div>
     {% endif %}
 </div>
-{% if recipe.category %}
-<a class="txtlink" href="{% url 'category' recipe.category.category.id %}">{{ recipe.category.category }}</a>
-{% else %}
-<p>Без категории</p>
-{% endif %}
-<div>
-    <div class="row align-items-start">
-        <div class="col">Автор: {{ recipe.author }}</div>
-        <div class="col">Создано: {{ recipe.created_at }}</div>
-        {% if recipe.is_changed %}
-        <div class="col">Изменено: {{ recipe.changed_at }}</div>
-        {% endif %}
+<div class="row align-items-start">
+    {% for category in recipe.get_categories %}
+    <div class="col">
+        <a class="txtlink" href="{% url 'category' category.id %}">{{ category }}</a>
     </div>
-    <hr>
-    {% if recipe.image %}
-    <img src="{{ recipe.image.url }}">
+    {% endfor %}
+</div>
+<div class="row align-items-start">
+    <div class="col">Автор: {{ recipe.author }}</div>
+    <div class="col">Создано: {{ recipe.created_at }}</div>
+    {% if recipe.is_changed %}
+    <div class="col">Изменено: {{ recipe.changed_at }}</div>
     {% endif %}
-    <div><h4>Описание</h4>
-        {{ recipe.description }}
-    </div>
-    <div><h4>Время приготовления</h4>
-        {{ recipe.time }}
-    </div>
-    <div><h4>Как готовить</h4>
-        {{ recipe.steps }}
-    </div>
+</div>
+<hr>
+{% if recipe.image %}
+<img src="{{ recipe.image.url }}">
+{% endif %}
+<div><h4>Описание</h4>
+    {{ recipe.description }}
+</div>
+<div><h4>Время приготовления</h4>
+    {{ recipe.time }}
+</div>
+<div><h4>Как готовить</h4>
+    {{ recipe.steps }}
 </div>
 {% endblock %}

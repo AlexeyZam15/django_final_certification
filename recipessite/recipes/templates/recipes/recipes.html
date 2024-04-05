@@ -34,9 +34,13 @@ page=page %}
                         </div>
                         {% endif %}
                     </div>
-                    {% if r.category %}
-                    <a class="txtlink" href="{% url 'category' r.category.category.id %}">{{ r.category.category }}</a>
-                    {% endif %}
+                    <div class="row align-items-start">
+                        {% for category in r.get_categories %}
+                        <div class="col">
+                            <a class="txtlink" href="{% url 'category' category.id %}">{{ category }}</a>
+                        </div>
+                        {% endfor %}
+                    </div>
                     <p class="card-text">{{ r.short }}</p>
                     <div class="col">Автор: {{ r.author }}</div>
                     <div class="row align-items-start">
