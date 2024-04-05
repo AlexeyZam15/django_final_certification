@@ -102,7 +102,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'AlexeyZam15$default',
-        'USER': 'AlexeyZam15>',
+        'USER': 'AlexeyZam15',
         'PASSWORD': os.getenv('MYSQL_PASSWORD'),
         'HOST': 'AlexeyZam15.mysql.pythonanywhere-services.com',
         'OPTIONS': {
