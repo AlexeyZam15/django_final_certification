@@ -1,6 +1,5 @@
-from datetime import datetime
-
 from django.db import models
+from ckeditor.fields import RichTextField
 
 """
 Модели
@@ -20,14 +19,15 @@ class Recipe(models.Model):
     ○ Автор
     ○ *другие поля на ваш выбор, например ингредиенты и т.п.
     """
-    title = models.CharField(max_length=100, unique=True, verbose_name='Название')
-    description = models.TextField(max_length=1000, verbose_name='Описание')
-    steps = models.TextField(max_length=1000, verbose_name='Шаги приготовления')
-    time = models.DurationField(verbose_name='Время приготовления')
-    image = models.FileField(upload_to='photos', blank=True, null=True, verbose_name='Изображение')
+    title = models.CharField(max_length=100, unique=True, verbose_name='Название', default='Название')
+    description = RichTextField(verbose_name='Описание', default='Описание')
+    steps = RichTextField(verbose_name='Шаги приготовления', default='Шаги приготовления')
+    time = models.DurationField(verbose_name='Время приготовления', default="00:05:00")
+    image = models.ImageField(upload_to='photos', blank=True, null=True, verbose_name='Изображение')
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE, verbose_name='Автор')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     changed_at = models.DateTimeField(auto_now=True, verbose_name='Дата изменения')
+    categories = models.ManyToManyField('Category', verbose_name='Категории', through='RecipeCategory')
 
     def __str__(self):
         return self.title
@@ -39,9 +39,9 @@ class Recipe(models.Model):
 
     def short(self):
         # Краткое описание
-        # Возвращает первые 10 слов из описания
-        return ' '.join(self.description.split()[:15]) + '...' if len(
-            self.description.split()) > 15 else self.description
+        # Возвращает первые 2 предложения из описания
+        text = self.description.split('.')
+        return '.'.join(text[:2]) + "." if len(text) >= 2 else text
 
     def is_changed(self):
         # Проверяет, изменился ли рецепт
@@ -49,14 +49,13 @@ class Recipe(models.Model):
         return self.changed_at != self.created_at
 
     @property
-    def category(self):
-        # Возвращает категорию рецепта
-        # Возвращает None, если рецепт не принадлежит ни одной категории
-        return RecipeCategory.objects.filter(recipe=self).first()
+    def get_categories(self):
+        # Возвращает список категорий рецепта
+        return [category for category in self.categories.all()]
 
     @staticmethod
     def get_fields():
-        return ['title', 'description', 'steps', 'image']
+        return ['title', 'description', 'steps', 'image', 'time', 'categories']
 
 
 class Category(models.Model):
@@ -66,15 +65,34 @@ class Category(models.Model):
     ○ *другие поля на ваш выбор
     """
     title = models.CharField(max_length=255, unique=True, verbose_name='Название')
-    description = models.TextField(max_length=1000, verbose_name='Описание')
+    description = RichTextField(verbose_name='Описание', default='Описание')
 
     def __str__(self):
         return self.title
 
     class Meta:
-        ordering = ['-id']
+        ordering = ['id']
         verbose_name = 'категория'
         verbose_name_plural = 'категории'
+
+    def short(self):
+        # Краткое описание
+        # Возвращает первые 2 предложения из описания
+        text = self.description.split('.')
+        return ('.'.join(text[:2]) + ".") if len(text) > 2 else self.description
+
+    def recipes(self):
+        # Возвращает рецепты категории
+        # Возвращает множество рецептов
+        return RecipeCategory.objects.filter(category=self).values_list('recipe', flat=True)
+
+    def last_created_recept_date(self):
+        # Возвращает дату последнего рецепта категории
+        # Возвращает дату или None, если рецептов нет
+        recipes = RecipeCategory.objects.filter(category=self).values_list('recipe', flat=True)
+        if recipes:
+            return Recipe.objects.filter(id__in=recipes).order_by('-created_at').first().created_at
+        return None
 
 
 class RecipeCategory(models.Model):

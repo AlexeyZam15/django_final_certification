@@ -1,47 +1,28 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
+
 from .forms import RegisterUserForm, LoginUserForm
 from django.contrib import messages
 
 
-def login_user(request):
-    form = LoginUserForm(request.POST or None)
-    if request.method == 'POST':
-        form = LoginUserForm(data=request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            user = authenticate(request, username=cd['username'], password=cd['password'])
-            if user and user.is_active:
-                login(request, user=user)
-                messages.success(request, 'Вы успешно вошли в систему')
-                return redirect('index')
-    context = {'form': form,
-               'title': 'Авторизация',
-               'url': 'login'}
-    return render(request, 'users/login.html', context)
+class LoginUser(LoginView):
+    form_class = LoginUserForm
+    template_name = 'users/login.html'
+    extra_context = {'title': 'Авторизация', 'url': 'login'}
 
 
-def logout_user(request):
-    if not request.user.is_authenticated:
-        messages.error(request, 'Вы не авторизованы')
-        return redirect('login')
+class RegisterUser(CreateView):
+    form_class = RegisterUserForm
+    template_name = 'users/register.html'
+    extra_context = {'title': 'Регистрация', 'url': 'register'}
+    success_url = reverse_lazy('login')
+
+
+@login_required
+def user_logout(request):
     logout(request)
-    messages.success(request, 'Вы успешно вышли из системы')
-    return redirect('login')
-
-
-def register(request):
-    form = RegisterUserForm(request.POST or None)
-    if request.method == 'POST':
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
-            user.save()
-            login(request, user)
-            messages.success(request, 'Вы успешно зарегистрировались')
-            return redirect('index')
-    context = {'form': form,
-               'title': 'Регистрация',
-               'url': 'register',
-               }
-    return render(request, 'users/register.html', context)
+    return redirect('index')

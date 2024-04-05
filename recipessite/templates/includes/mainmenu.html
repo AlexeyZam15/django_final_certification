@@ -1,14 +1,27 @@
-<div class=" collapse navbar-collapse" id="navbarNavDropdown">
+<div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav ms-auto ">
         {% for m in mainmenu %}
+        {% if m.sub_menu %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="{{ m.url }}" data-bs-toggle="dropdown"  >
+            {{ m.title }}
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              {% for p in m.sub_menu %}
+            <li><a class="dropdown-item" href="{{ p.url }}">{{ p.title }}</a></li>
+              {% endfor %}
+          </ul>
+        </li>
+        {% else %}
         {% if m.url_name == url %}
         <li class="nav-item">
-            <a class="nav-link mx-2 active" aria-current="page" href="{% url m.url_name %}">{{ m.title }}</a>
+            <a class="nav-link active" aria-current="page" href="{{ m.url }}">{{ m.title }}</a>
         </li>
         {% else %}
         <li class="nav-item">
-            <a class="nav-link mx-2" aria-current="page" href="{% url m.url_name %}">{{ m.title }}</a>
+            <a class="nav-link" aria-current="page" href="{{ m.url }}">{{ m.title }}</a>
         </li>
+        {% endif %}
         {% endif %}
         {% endfor %}
 
@@ -19,15 +32,15 @@
             <span class="navbar-brand mb-0 h1">{{ user.username }}</span>
         </li>
         <li class="nav-item">
-            <a class="nav-link mx-2" aria-current="page" href="{% url 'logout' %}">Выйти</a>
+            <a class="nav-link active" aria-current="page" href="{% url 'logout' %}">Выйти</a>
         </li>
 
         {% else %}
         <li class="nav-item">
             {% if url == "login" %}
-            <a class="nav-link mx-2 active" aria-current="page" href="{% url 'login' %}">Войти</a>
+            <a class="nav-link active" aria-current="page" href="{% url 'login' %}">Войти</a>
             {% else %}
-            <a class="nav-link mx-" aria-current="page" href="{% url 'login' %}">Войти</a>
+            <a class="nav-link " aria-current="page" href="{% url 'login' %}">Войти</a>
             {% endif %}
         </li>
         <li class="nav-item">

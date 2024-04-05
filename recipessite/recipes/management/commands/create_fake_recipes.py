@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.core.management.base import BaseCommand
 from django.utils import lorem_ipsum
 
-from recipes.models import Recipe
+from recipes.models import Recipe, RecipeCategory, Category
 
 from django.contrib.auth.models import User
 
@@ -41,5 +41,18 @@ class Command(BaseCommand):
             author=random.choice(users),
         ) for i in range(options['n'])]
         Recipe.objects.bulk_create(data)
+
+        recipes = filter(lambda x: not x.category, Recipe.objects.all())
+        categories = Category.objects.all()
+
+        data = [RecipeCategory(
+            recipe=recipe,
+            category=random.choice(categories))
+            for recipe in recipes]
+        if not data:
+            self.stdout.write(self.style.WARNING('No recipes without category found'))
+            return
+        RecipeCategory.objects.bulk_create(data)
+
         self.stdout.write(self.style.SUCCESS(f'{options["n"]} fake recipes created'))
         return

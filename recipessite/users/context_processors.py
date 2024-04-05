@@ -1,5 +1,5 @@
-from recipes.utils import menu, usermenu
+from recipes.utils import get_menu
 
 
 def get_recipes_context(request):
-    return {'mainmenu': menu, 'usermenu': usermenu}
+    return {'mainmenu': get_menu()}

@@ -18,7 +18,7 @@ class RecipeAdmin(admin.ModelAdmin):
             return mark_safe(f'<a href="{recipe.image.url}" ><img src="{recipe.image.url}" width="60"></a>')
         return 'отсутствует'
 
-    @admin.display(description='Категория')
+    @admin.display(description='Категории')
     def category(self, recipe: Recipe):
         return ', '.join([rc.category.title for rc in RecipeCategory.objects.filter(recipe=recipe)])
 

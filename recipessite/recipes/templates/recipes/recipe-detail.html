@@ -1,28 +1,50 @@
 {% extends 'base.html' %}
 {% block title %} Рецепт {{ title }} {% endblock %}
 {% block content%}
-<h1> Рецепт {{ heading }} </h1>
-
-<div>
-    <p>Автор - {{ recipe.author }}</p>
-    <p>Создано {{ recipe.created_at }}</p>
-    {% if recipe.changed %}
-    <p>Изменено {{ recipe.changed_at }}</p>
-    {% endif %}
-    {% if recipe.author == user %}
-    <p><a class="btn btn-primary" href="{% url 'edit_recipe' recipe.id %}" role="button">Редактировать</a></p>
-    {% endif %}
-    {% if recipe.image %}
-    <img src="{{ recipe.image.url }}">
-    {% endif %}
-    <div><h4>Описание</h4>
-        {{ recipe.description }}
+<div class="row align-items-start">
+    <div class="col">
+        <h1> {{ heading }} </h1>
     </div>
-    <div><h4>Время приготовления</h4>
-        {{ recipe.time }}
+    {% if user.is_superuser or recipe.author == user %}
+    <div class="col">
+        <p><a class="btn btn-success" href="{% url 'edit_recipe' recipe.id %}" role="button">Редактировать</a></p>
     </div>
-    <div><h4>Как готовить</h4>
-        {{ recipe.steps }}
+    <div class="col">
+        <p><a class="btn btn-danger" href="{% url 'delete_recipe' recipe.id %}" role="button"
+              onclick="return confirm('Вы уверены что хотите удалить данный рецепт?')">Удалить</a></p>
     </div>
+    {% endif %}
+</div>
+<div class="row align-items-start">
+    {% for category in recipe.get_categories %}
+    <div class="col">
+        <a class="txtlink" href="{% url 'category' category.id %}">{{ category }}</a>
+    </div>
+    {% endfor %}
+</div>
+<div class="row align-items-start">
+    <div class="col">Автор: {% if recipe.author.first_name or r.author.last_name %}
+        {{ recipe.author.first_name }} {{ recipe.author.last_name }}
+        {% else %}
+        {{ recipe.author }}
+        {% endif %}
+    </div>
+    <div class="col">Создано: {{ recipe.created_at }}</div>
+    {% if recipe.is_changed %}
+    <div class="col">Изменено: {{ recipe.changed_at }}</div>
+    {% endif %}
+</div>
+<hr>
+{% if recipe.image %}
+<img width="50%" src="{{ recipe.image.url }}">
+{% endif %}
+<div><h4>Описание</h4>
+    {{ recipe.description|safe }}
+</div>
+<div><h4>Время приготовления</h4>
+    {{ recipe.time }}
+</div>
+<div><h4>Инструкция приготовления</h4>
+    {{ recipe.steps|safe }}
 </div>
 {% endblock %}
