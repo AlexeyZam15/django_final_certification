@@ -1,3 +1,6 @@
+import re
+import html
+
 from django.db import models
 from ckeditor.fields import RichTextField
 
@@ -6,6 +9,24 @@ from ckeditor.fields import RichTextField
 Для работы с пользователями используйте встроенного в Django User`a.
 Подготовьте нижеперечисленные модели:
 """
+
+
+def _plain_text_from_html(raw, max_chars=300):
+    """Превращает HTML из RichTextField в безопасный чистый текст.
+
+    - вырезает все теги (в т.ч. незакрытые <table>/<a> из скопированного HTML);
+    - декодирует HTML-сущности (&nbsp; и т.п.);
+    - нормализует пробелы;
+    - обрезает по max_chars.
+    """
+    if not raw:
+        return ''
+    text = re.sub(r'<[^>]+>', ' ', str(raw))
+    text = html.unescape(text)
+    text = re.sub(r'\s+', ' ', text).strip()
+    if max_chars and len(text) > max_chars:
+        text = text[:max_chars].rstrip() + '…'
+    return text
 
 
 class Recipe(models.Model):
@@ -38,10 +59,13 @@ class Recipe(models.Model):
         verbose_name_plural = 'рецепты'
 
     def short(self):
-        # Краткое описание
-        # Возвращает первые 2 предложения из описания
-        text = self.description.split('.')
-        return '.'.join(text[:2]) + "." if len(text) >= 2 else text
+        # Краткое описание: первые 2 предложения чистого текста (без HTML)
+        text = _plain_text_from_html(self.description)
+        if not text:
+            return ''
+        sentences = re.split(r'(?<=[.!?])\s+', text)
+        result = ' '.join(sentences[:2]).strip()
+        return result
 
     def is_changed(self):
         # Проверяет, изменился ли рецепт
@@ -76,10 +100,12 @@ class Category(models.Model):
         verbose_name_plural = 'категории'
 
     def short(self):
-        # Краткое описание
-        # Возвращает первые 2 предложения из описания
-        text = self.description.split('.')
-        return ('.'.join(text[:2]) + ".") if len(text) > 2 else self.description
+        # Краткое описание: первые 2 предложения чистого текста (без HTML)
+        text = _plain_text_from_html(self.description)
+        if not text:
+            return ''
+        sentences = re.split(r'(?<=[.!?])\s+', text)
+        return ' '.join(sentences[:2]).strip()
 
     def recipes(self):
         # Возвращает рецепты категории
