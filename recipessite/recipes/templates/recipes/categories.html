@@ -5,9 +5,7 @@
     <h1> {{ heading }} </h1>
 </div>
 <!-- Pagination -->
-{% include 'includes/pagination.html' with
-page_obj=page_obj
-page=page %}
+{% include 'includes/pagination.html' with page_obj=page_obj page=page %}
 <div class="row row-cols-1 row-cols-md-2 g-4">
     {% for c in page_obj %}
     <div class="card mb-3" style="max-width: 540px;">
@@ -16,7 +14,7 @@ page=page %}
                 <div class="card-body">
                     <a href="{% url 'category' c.id %}" class="txtlink">
                         <h5 class="card-title">{{ c.title }}</h5></a>
-                    <p class="card-text">{{ c.short|safe }}</p>
+                    <div class="card-text">{{ c.short|safe }}</div>
                     <p>Рецептов: {{ c.recipes|length }}</p>
                     {% if c.recipes %}
                     <a class="btn btn-dark" href="{% url 'category_recipes' c.id %}" role="button">Посмотреть статьи</a>
@@ -28,8 +26,6 @@ page=page %}
     {% endfor %}
 </div>
 <!-- Pagination -->
-{% include 'includes/pagination.html' with
-page_obj=page_obj
-page=page %}
+{% include 'includes/pagination.html' with page_obj=page_obj page=page %}
 
 {% endblock %}
